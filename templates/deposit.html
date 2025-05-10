@@ -1,0 +1,228 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Deposit</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        body {
+            background-color: #0d0d0d;
+            font-family: Arial, sans-serif;
+            text-align: center;
+            margin: 0;
+            padding: 0;
+            color: white;
+        }
+        .container {
+            max-width: 400px;
+            margin: 40px auto;
+            padding: 20px;
+            background-color: #1a1a1a;
+            border-radius: 15px;
+            position: relative;
+        }
+        .logo {
+            width: 80px;
+            margin-bottom: 15px;
+        }
+        .qr {
+            width: 150px;
+            margin-top: 10px;
+        }
+        .btc-address {
+            background: #333;
+            padding: 10px;
+            border-radius: 10px;
+            font-family: monospace;
+            font-size: 14px;
+            margin-top: 20px;
+            word-wrap: break-word;
+        }
+        .copy-btn, .verify-btn {
+            margin-top: 15px;
+            background-color: #1e90ff;
+            color: black;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 25px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+        input[type="text"] {
+            width: 100%;
+            padding: 10px;
+            margin-top: 15px;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+        }
+        .nav {
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+            background: #111;
+            display: flex;
+            justify-content: space-around;
+            padding: 10px 0;
+        }
+        .nav a {
+            color: white;
+            text-decoration: none;
+            font-size: 14px;
+        }
+        #copy-alert {
+            position: fixed;
+            bottom: 90px;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: #2ecc71;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 30px;
+            font-weight: bold;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            z-index: 1000;
+        }
+        .notice {
+            max-width: 400px;
+            margin: 30px auto;
+            color: #ccc;
+            font-size: 14px;
+            text-align: left;
+            padding: 20px;
+            background-color: #1a1a1a;
+            border-radius: 15px;
+        }
+        .notice h3 {
+            color: white;
+            margin-bottom: 10px;
+        }
+        .notice ol {
+            padding-left: 18px;
+        }
+        .notice li {
+            margin-bottom: 10px;
+        }
+        .record-button {
+            position: absolute;
+            top: 15px;
+            right: 20px;
+        }
+        .record-button a {
+            color: #1e90ff;
+            font-size: 14px;
+            font-weight: bold;
+            text-decoration: none;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            color: white;
+            font-size: 14px;
+        }
+        th, td {
+            padding: 10px;
+        }
+        th {
+            background-color: #333;
+        }
+        tr:nth-child(even) {
+            background-color: #222;
+        }
+        .status-confirmed {
+            color: #2ecc71;
+        }
+        .status-pending {
+            color: #1e90ff;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div class="record-button">
+        <a href="#deposit-record">Deposit Record</a>
+    </div>
+
+    <img src="{{ url_for('static', filename='btc-logo.png') }}" alt="Bitcoin Logo" class="logo">
+    <h2>Recharge</h2>
+    <img src="{{ url_for('static', filename='btc-qr.png') }}" alt="BTC QR Code" class="qr">
+
+    <div id="btc-address" class="btc-address">
+        bc1qg9aph4er0d9rds0f94smgm89ey8n2qamxnsmkp
+    </div>
+
+    <button class="copy-btn" onclick="copyAddress()">Copy Address</button>
+
+    <form method="POST">
+        <input type="text" name="txid" placeholder="Enter TXID" required>
+        <button type="submit" class="verify-btn">Verify Deposit</button>
+    </form>
+
+    {% if message %}
+    <div style="color: #1e90ff; margin-top: 15px; font-weight: bold;">
+        {{ message }}
+    </div>
+    {% endif %}
+
+    <div id="copy-alert">Address Copied!</div>
+</div>
+
+<div class="notice">
+    <h3>Important Notice</h3>
+    <ol>
+        <li>Only send Bitcoin (BTC) to the address shown above. Sending any other assets may result in loss.</li>
+        <li>Wait for at least 1 network confirmation before submitting the TXID for verification.</li>
+        <li>Make sure the TXID is accurate. Fake or invalid TXIDs will not be processed.</li>
+        <li>Deposits are credited only after confirmation and successful TXID verification.</li>
+    </ol>
+</div>
+
+<div id="deposit-record" style="max-width: 400px; margin: 30px auto; background-color: #1a1a1a; padding: 20px; border-radius: 15px;">
+    <h3 style="color: white; text-align: left;">Deposit Record</h3>
+    <table>
+        <thead>
+            <tr>
+                <th>Amount</th>
+                <th>TXID</th>
+                <th>Time</th>
+                <th>Status</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for deposit in deposits %}
+            <tr>
+                <td>{{ deposit['amount'] }}</td>
+                <td>{{ deposit['txid'][:12] }}...</td>
+                <td>{{ deposit['timestamp'] }}</td>
+                <td class="status-{{ deposit['status'] }}">{{ deposit['status'].capitalize() }}</td>
+            </tr>
+            {% else %}
+            <tr><td colspan="4" style="text-align: center;">No deposit records</td></tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+<div class="nav">
+    <a href="/home">Home</a>
+    <a href="/assets">Assets</a>
+</div>
+
+<script>
+    function copyAddress() {
+        const address = document.getElementById('btc-address').innerText;
+        navigator.clipboard.writeText(address).then(() => {
+            const alertBox = document.getElementById("copy-alert");
+            alertBox.style.opacity = 1;
+            setTimeout(() => {
+                alertBox.style.opacity = 0;
+            }, 1500);
+        });
+    }
+</script>
+
+</body>
+</html>

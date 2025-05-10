@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Bitcoin Wallet - Login/Register</title>
+</head>
+<body>
+  <h2>Register</h2>
+  <input type="text" id="regUser" placeholder="Username">
+  <input type="password" id="regPass" placeholder="Password">
+  <input type="text" id="regAddress" placeholder="Your BTC Address">
+  <button onclick="register()">Register</button>
+
+  <h2>Login</h2>
+  <input type="text" id="logUser" placeholder="Username">
+  <input type="password" id="logPass" placeholder="Password">
+  <button onclick="login()">Login</button>
+
+  <p id="output"></p>
+
+  <script>
+    async function register() {
+      const username = document.getElementById("regUser").value;
+      const password = document.getElementById("regPass").value;
+      const btcAddress = document.getElementById("regAddress").value;
+
+      const res = await fetch('/register', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({username, password, btcAddress})
+      });
+
+      const text = await res.text();
+      document.getElementById("output").innerText = text;
+    }
+
+    async function login() {
+      const username = document.getElementById("logUser").value;
+      const password = document.getElementById("logPass").value;
+
+      const res = await fetch('/login', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({username, password})
+      });
+
+      const text = await res.text();
+      document.getElementById("output").innerText = text;
+    }
+  </script>
+</body>
+</html>

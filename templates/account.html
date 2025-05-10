@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Account</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        body {
+            background-color: #000;
+            color: white;
+            font-family: 'Segoe UI', sans-serif;
+            margin: 0;
+            padding-bottom: 80px;
+        }
+        .container {
+            max-width: 500px;
+            margin: 0 auto;
+            padding: 20px 15px;
+        }
+        .card {
+            background: #1a1a1a;
+            border-radius: 16px;
+            padding: 25px 20px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.5);
+            margin-bottom: 25px;
+            text-align: center;
+        }
+        .card h3 {
+            margin: 0 0 10px;
+            color: #1e90ff;
+            font-size: 18px;
+        }
+        .balance-amount {
+            font-size: 32px;
+            font-weight: bold;
+            color: #1e90ff;
+        }
+        .qr-container img {
+            width: 180px;
+            height: 180px;
+        }
+        .address {
+            font-size: 13px;
+            color: #ccc;
+            word-wrap: break-word;
+            margin-top: 10px;
+        }
+        .copy-btn {
+            background-color: #333;
+            color: #1e90ff;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 8px;
+            margin-top: 12px;
+            cursor: pointer;
+        }
+        .verify-age label {
+            font-size: 14px;
+        }
+        .verify-age p {
+            font-size: 12px;
+            color: #888;
+        }
+        .nav {
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+            background: #111;
+            display: flex;
+            justify-content: space-around;
+            padding: 10px 0;
+        }
+        .nav a {
+            color: white;
+            text-decoration: none;
+            font-size: 14px;
+        }
+        .nav a.active {
+            color: #1e90ff;
+        }
+        .toast {
+            visibility: hidden;
+            min-width: 160px;
+            background-color: #333;
+            color: #1e90ff;
+            text-align: center;
+            border-radius: 8px;
+            padding: 12px;
+            position: fixed;
+            z-index: 1;
+            bottom: 100px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 14px;
+            transition: opacity 0.5s ease, visibility 0.5s;
+            opacity: 0;
+        }
+        .toast.show {
+            visibility: visible;
+            opacity: 1;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+
+    <div class="card">
+        <h3>Total Balance</h3>
+        <div class="balance-amount">${{ balance_usd }}</div>
+        <small style="color: #ccc;">(~{{ balance }} BTC)</small>
+    </div>
+
+    <div class="card">
+        <h3>Deposit Bitcoin</h3>
+        <div class="qr-container">
+            <img src="https://api.qrserver.com/v1/create-qr-code/?data={{ deposit_address }}&size=200x200" alt="Deposit QR">
+        </div>
+        <div class="address" id="btc-address">{{ deposit_address }}</div>
+        <button class="copy-btn" onclick="copyAddress()">Copy Address</button>
+    </div>
+
+    <div class="card verify-age">
+        <label>
+            <input type="checkbox" id="ageCheck"> I confirm I am 18+ and a US resident.
+        </label>
+        <p>Required for compliance and regulations.</p>
+    </div>
+
+    <div class="card">
+        <h3>Your Referral Link</h3>
+        <p style="font-size: 14px; word-wrap: break-word;">{{ request.url_root }}register?ref={{ username }}</p>
+    </div>
+
+</div>
+
+<!-- Toast -->
+<div id="toast" class="toast">Address copied!</div>
+
+<!-- Copy sound -->
+<audio id="copy-sound" preload="auto">
+    <source src="https://assets.mixkit.co/sfx/preview/mixkit-select-click-1109.mp3" type="audio/mpeg">
+</audio>
+
+<div class="nav">
+    <a href="/home"><i class="fas fa-home"></i> Home</a>
+</div>
+
+<script>
+function copyAddress() {
+    const addr = document.getElementById("btc-address").innerText;
+    navigator.clipboard.writeText(addr).then(() => {
+        document.getElementById("copy-sound").play();
+        const toast = document.getElementById("toast");
+        toast.classList.add("show");
+        setTimeout(() => {
+            toast.classList.remove("show");
+        }, 2000);
+    });
+}
+</script>
+
+<!-- Font Awesome -->
+<script src="https://kit.fontawesome.com/a2e0c1c5f0.js" crossorigin="anonymous"></script>
+
+</body>
+</html>

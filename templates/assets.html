@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Assets</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <style>
+        body {
+            background-color: #000;
+            color: #fff;
+            margin: 0;
+            font-family: Arial, sans-serif;
+        }
+        .container {
+            padding: 20px;
+            padding-bottom: 100px;
+        }
+        .balance-card {
+            background: #111;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        .balance-card h3 {
+            margin: 0 0 10px;
+            color: #007bff;
+        }
+        .balance-card .amount {
+            font-size: 24px;
+            font-weight: bold;
+            color: #fff;
+            margin: 0;
+        }
+        .balance-card small {
+            color: #aaa;
+        }
+        .actions {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+        .action {
+            background: #1a1a1a;
+            border-radius: 10px;
+            padding: 14px;
+            text-align: center;
+            font-size: 14px;
+            color: #ccc;
+        }
+        .action i {
+            font-size: 20px;
+            margin-bottom: 6px;
+            color: #007bff;
+        }
+        .section {
+            background: #111;
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 10px;
+            cursor: pointer;
+        }
+        .section h4 {
+            margin: 0 0 6px;
+            font-weight: normal;
+            color: #007bff;
+        }
+        .section p {
+            margin: 0;
+            font-size: 16px;
+            color: #fff;
+        }
+        .nav {
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+            display: flex;
+            justify-content: space-around;
+            background: #111;
+            padding: 12px 0;
+            box-shadow: 0 -1px 5px rgba(255, 255, 255, 0.05);
+        }
+        .nav a {
+            color: #888;
+            text-decoration: none;
+            font-size: 14px;
+            text-align: center;
+            flex: 1;
+        }
+        .nav a.active,
+        .nav a:hover {
+            color: #007bff;
+        }
+        .nav-icon {
+            font-size: 18px;
+            display: block;
+            margin-bottom: 2px;
+        }
+    </style>
+    <script src="https://kit.fontawesome.com/a2e0c1c5f0.js" crossorigin="anonymous"></script>
+</head>
+<body>
+
+<div class="container">
+    <div class="balance-card">
+        <h3>Total Assets</h3>
+        <p class="amount">${{ total_usd }}</p>
+        <small>(~{{ total }} BTC)</small>
+    </div>
+
+    <div class="actions">
+        <a class="action" href="{{ url_for('deposit') }}">
+            <i class="fas fa-arrow-circle-down"></i><br>Deposit
+        </a>
+        <a class="action" href="{{ url_for('withdraw') }}">
+            <i class="fas fa-arrow-circle-up"></i><br>Withdraw
+        </a>
+        <a class="action" href="javascript:void(0);" onclick="showDepositPopup()">
+            <i class="fas fa-sync-alt"></i><br>Convert
+        </a>
+        <a class="action" href="javascript:void(0);" onclick="showDepositPopup()">
+            <i class="fas fa-paper-plane"></i><br>Transfer
+        </a>
+        <a class="action" href="{{ url_for('account') }}">
+            <i class="fas fa-wallet"></i><br>Wallet
+        </a>
+        <a class="action" href="{{ url_for('history') }}">
+            <i class="fas fa-history"></i><br>History
+        </a>
+    </div>
+
+    <div class="section" onclick="showDepositPopup()">
+        <h4>Exchange</h4>
+        <p>{{ exchange }} BTC</p>
+    </div>
+    <div class="section" onclick="showDepositPopup()">
+        <h4>Trade</h4>
+        <p>{{ trade }} BTC</p>
+    </div>
+    <div class="section" onclick="showDepositPopup()">
+        <h4>Perpetual</h4>
+        <p>{{ perpetual }} BTC</p>
+    </div>
+</div>
+
+<div class="nav">
+    <a href="{{ url_for('home') }}">
+        <span class="nav-icon"><i class="fas fa-home"></i></span>
+        Home
+    </a>
+    <a href="{{ url_for('earn') }}">
+        <span class="nav-icon"><i class="fas fa-gift"></i></span>
+        EARN
+    </a>
+    <a href="{{ url_for('assets') }}" class="active">
+        <span class="nav-icon"><i class="fas fa-coins"></i></span>
+        Assets
+    </a>
+</div>
+
+<script>
+function showDepositPopup() {
+    const popup = document.createElement('div');
+    popup.style.position = 'fixed';
+    popup.style.top = 0;
+    popup.style.left = 0;
+    popup.style.width = '100%';
+    popup.style.height = '100%';
+    popup.style.background = 'rgba(0,0,0,0.7)';
+    popup.style.display = 'flex';
+    popup.style.alignItems = 'center';
+    popup.style.justifyContent = 'center';
+    popup.style.zIndex = 9999;
+
+    popup.innerHTML = `
+        <div style="background:#111;padding:20px;border-radius:12px;text-align:center;width:80%;max-width:300px;">
+            <p style="color:white;margin-bottom:20px;">Please make a deposit first to use this feature.</p>
+            <a href='{{ url_for('deposit') }}' style="display:inline-block;background:#007bff;color:#fff;padding:10px 20px;border-radius:8px;text-decoration:none;margin-right:10px;">Deposit</a>
+            <button onclick="document.body.removeChild(this.parentElement.parentElement)" style="background:#333;color:#fff;padding:10px 20px;border:none;border-radius:8px;">Cancel</button>
+        </div>
+    `;
+    document.body.appendChild(popup);
+}
+</script>
+
+</body>
+</html>

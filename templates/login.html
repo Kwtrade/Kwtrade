@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Login - My Wallet</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <style>
+    body {
+      margin: 0;
+      font-family: "Segoe UI", sans-serif;
+      background-color: #0d0d0d;
+      color: #fff;
+    }
+
+    .header {
+      background: linear-gradient(90deg, #007bff, #00aaff);
+      padding: 30px 20px 20px;
+      text-align: center;
+    }
+
+    .header h2 {
+      margin: 0;
+      font-size: 24px;
+      color: #fff;
+    }
+
+    .header p {
+      margin: 5px 0 0;
+      font-size: 14px;
+      color: #e0e0e0;
+    }
+
+    .tabs {
+      display: flex;
+      margin: 0 auto;
+      max-width: 360px;
+      background-color: #1a1a1a;
+      border-radius: 10px;
+      overflow: hidden;
+      margin-top: 15px;
+    }
+
+    .tab {
+      flex: 1;
+      padding: 12px;
+      text-align: center;
+      font-weight: bold;
+      font-size: 15px;
+      color: #888;
+      background-color: #1a1a1a;
+      cursor: pointer;
+    }
+
+    .tab.active {
+      background-color: #121212;
+      color: #1e90ff;
+      border-bottom: 2px solid #1e90ff;
+    }
+
+    .container {
+      max-width: 360px;
+      margin: 20px auto;
+      padding: 20px;
+    }
+
+    .form-group {
+      margin-bottom: 18px;
+    }
+
+    .form-group label {
+      display: block;
+      margin-bottom: 6px;
+      font-size: 14px;
+    }
+
+    .form-group input {
+      width: 100%;
+      padding: 10px;
+      background-color: #222;
+      border: 1px solid #333;
+      border-radius: 6px;
+      color: #fff;
+      font-size: 14px;
+    }
+
+    .remember {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 13px;
+      margin-bottom: 20px;
+    }
+
+    .btn {
+      width: 100%;
+      padding: 12px;
+      background: #1e90ff;
+      color: #fff;
+      font-size: 16px;
+      border: none;
+      border-radius: 6px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    .btn:hover {
+      background: #0078e7;
+    }
+
+    .links {
+      text-align: center;
+      margin-top: 24px;
+      font-size: 13px;
+      color: #aaa;
+    }
+
+    .links a {
+      color: #1e90ff;
+      text-decoration: none;
+      margin: 0 8px;
+    }
+
+    .links a:hover {
+      text-decoration: underline;
+    }
+
+    .error {
+      text-align: center;
+      color: #ff4d4d;
+      margin-top: 10px;
+      font-size: 14px;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="header">
+    <h2>My Wallet</h2>
+    <p>Please log in with your username or email</p>
+  </div>
+
+  <div class="tabs">
+    <div class="tab active" onclick="switchTab('username')">Username Login</div>
+    <div class="tab" onclick="switchTab('email')">Email Login</div>
+  </div>
+
+  <div class="container">
+    {% if error %}
+      <div class="error">{{ error }}</div>
+    {% endif %}
+    <form action="{{ url_for('login') }}" method="post">
+      <div class="form-group" id="username-field">
+        <label>Username</label>
+        <input type="text" name="identifier" placeholder="Enter your username" required>
+      </div>
+
+      <div class="form-group" id="email-field" style="display: none;">
+        <label>Email</label>
+        <input type="text" name="identifier" placeholder="Enter your email">
+      </div>
+
+      <div class="form-group">
+        <label>Password</label>
+        <input type="password" name="password" placeholder="Password" required>
+      </div>
+
+      <div class="remember">
+        <input type="checkbox" name="remember">
+        <label>Remember password</label>
+      </div>
+
+      <button type="submit" class="btn">Log in</button>
+    </form>
+
+    <div class="links">
+      <a href="/register">Register</a><br><br>
+      <a href="/forgot">Forgot Password</a> |
+      <a href="/support">Customer Service</a>
+    </div>
+  </div>
+
+  <script>
+    function switchTab(tab) {
+      const usernameTab = document.querySelectorAll('.tab')[0];
+      const emailTab = document.querySelectorAll('.tab')[1];
+      const usernameField = document.getElementById('username-field');
+      const emailField = document.getElementById('email-field');
+
+      if (tab === 'username') {
+        usernameTab.classList.add('active');
+        emailTab.classList.remove('active');
+        usernameField.style.display = 'block';
+        emailField.style.display = 'none';
+        document.querySelector('[name="identifier"]').setAttribute('placeholder', 'Enter your username');
+      } else {
+        usernameTab.classList.remove('active');
+        emailTab.classList.add('active');
+        usernameField.style.display = 'none';
+        emailField.style.display = 'block';
+        document.querySelector('[name="identifier"]').setAttribute('placeholder', 'Enter your email');
+      }
+    }
+  </script>
+
+</body>
+</html>

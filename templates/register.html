@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Register - My Wallet</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    :root {
+      --primary: #007bff;
+      --accent: #00aaff;
+      --bg-dark: #121212;
+      --bg-input: #1e1e1e;
+      --text-light: #f2f2f2;
+      --text-muted: #aaa;
+    }
+
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: 'Segoe UI', sans-serif;
+      background-color: var(--bg-dark);
+      color: var(--text-light);
+    }
+
+    .header {
+      background: linear-gradient(to right, var(--primary), var(--accent));
+      padding: 40px 20px 20px;
+      text-align: center;
+      border-bottom-left-radius: 20px;
+      border-bottom-right-radius: 20px;
+    }
+
+    .header img {
+      height: 45px;
+      margin-bottom: 10px;
+    }
+
+    .header h1 {
+      margin: 0;
+      font-size: 22px;
+      font-weight: bold;
+      color: white;
+    }
+
+    .container {
+      max-width: 400px;
+      margin: 25px auto;
+      padding: 20px;
+    }
+
+    .form-group {
+      margin-bottom: 20px;
+    }
+
+    label {
+      display: block;
+      font-size: 14px;
+      margin-bottom: 6px;
+      color: var(--text-muted);
+    }
+
+    input[type="text"],
+    input[type="email"],
+    input[type="password"] {
+      width: 100%;
+      padding: 12px;
+      border: none;
+      border-radius: 10px;
+      font-size: 15px;
+      background-color: var(--bg-input);
+      color: var(--text-light);
+    }
+
+    input::placeholder {
+      color: #666;
+    }
+
+    .checkbox {
+      display: flex;
+      align-items: center;
+      font-size: 13px;
+      color: var(--text-muted);
+      margin-bottom: 20px;
+    }
+
+    .checkbox input {
+      margin-right: 10px;
+    }
+
+    .checkbox a {
+      color: #ff4d4d;
+      text-decoration: none;
+    }
+
+    .btn {
+      width: 100%;
+      padding: 14px;
+      border: none;
+      border-radius: 10px;
+      background: linear-gradient(to right, var(--primary), var(--accent));
+      color: white;
+      font-size: 16px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    .btn:hover {
+      opacity: 0.95;
+    }
+
+    .bottom-text {
+      text-align: center;
+      margin-top: 24px;
+      font-size: 14px;
+      color: var(--text-muted);
+    }
+
+    .bottom-text a {
+      color: var(--accent);
+      font-weight: bold;
+      text-decoration: none;
+    }
+
+    .bottom-text a:hover {
+      text-decoration: underline;
+    }
+  </style>
+</head>
+<body>
+
+<div class="header">
+  <img src="{{ url_for('static', filename='kw.png') }}" alt="Logo">
+  <h1>Create Wallet Account</h1>
+</div>
+
+  <div class="container">
+    <form action="/register" method="post">
+
+      <div class="form-group">
+        <label>Username</label>
+        <input type="text" name="username" placeholder="Choose a username" required>
+      </div>
+
+      <div class="form-group">
+        <label>Email (optional)</label>
+        <input type="email" name="email" placeholder="Your email address">
+      </div>
+
+      <div class="form-group">
+        <label>Set Password</label>
+        <input type="password" name="password" placeholder="Set a password" required>
+      </div>
+
+      <div class="form-group">
+        <label>Confirm Password</label>
+        <input type="password" name="confirm" placeholder="Re-enter password" required>
+      </div>
+
+      <div class="form-group">
+        <label>Invite Code (optional)</label>
+        <input type="text" name="referral" placeholder="Referral code if any">
+      </div>
+
+      <div class="checkbox">
+        <input type="checkbox" name="agree" required>
+        <label>I agree to the <a href="/privacy">Privacy Agreement</a></label>
+      </div>
+
+      <button type="submit" class="btn">Register</button>
+    </form>
+
+    <div class="bottom-text">
+      Already have an account? <a href="/login">Login</a>
+    </div>
+  </div>
+
+</body>
+</html>

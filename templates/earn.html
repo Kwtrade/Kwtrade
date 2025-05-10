@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Earn - Referral Program</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        body {
+            background: #000;
+            color: #fff;
+            font-family: 'Segoe UI', sans-serif;
+            margin: 0;
+            padding-bottom: 80px;
+        }
+        .container {
+            max-width: 500px;
+            margin: auto;
+            padding: 30px 20px;
+            text-align: center;
+        }
+        h2 {
+            color: #007bff;
+            margin-bottom: 20px;
+        }
+        .referral-box {
+            background: #1a1a1a;
+            border-radius: 16px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.6);
+        }
+        .referral-box p {
+            font-size: 15px;
+            margin: 10px 0;
+        }
+        .highlight {
+            color: #007bff;
+            word-break: break-word;
+        }
+        .copy-btn {
+            background: #007bff;
+            color: #000;
+            border: none;
+            padding: 10px 18px;
+            font-size: 14px;
+            border-radius: 8px;
+            cursor: pointer;
+            margin-top: 10px;
+            transition: background 0.3s;
+        }
+        .copy-btn:hover {
+            background: #339dff;
+        }
+        .reward-history {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            text-align: left;
+            font-size: 14px;
+        }
+        .reward-history li {
+            padding: 10px 0;
+            border-bottom: 1px solid #333;
+        }
+        .reward-history small {
+            color: #999;
+        }
+        .nav {
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+            background: #111;
+            display: flex;
+            justify-content: space-around;
+            padding: 10px 0;
+            border-top: 1px solid #222;
+        }
+        .nav a {
+            color: #ccc;
+            text-decoration: none;
+            font-size: 14px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .nav a.active {
+            color: #007bff;
+        }
+        .nav i {
+            font-size: 18px;
+            margin-bottom: 2px;
+        }
+
+        #toast {
+            visibility: hidden;
+            min-width: 120px;
+            background-color: #333;
+            color: #fff;
+            text-align: center;
+            border-radius: 12px;
+            padding: 12px 24px;
+            position: fixed;
+            z-index: 1;
+            left: 50%;
+            bottom: 100px;
+            font-size: 14px;
+            transform: translateX(-50%);
+            opacity: 0;
+            transition: opacity 0.4s ease-in-out;
+        }
+        #toast.show {
+            visibility: visible;
+            opacity: 1;
+        }
+</style>
+<script src="https://kit.fontawesome.com/a2e0c1c5f0.js" crossorigin="anonymous"></script>
+</head>
+<body>
+
+<div class="container">
+    <h2>Invite & Earn</h2>
+
+    <div class="referral-box">
+        <p><strong>Your Referral Link:</strong></p>
+        <p class="highlight" id="ref-link">{{ request.url_root }}register?ref={{ username }}</p>
+        <button class="copy-btn" onclick="copyReferral()">Copy Link</button>
+    </div>
+
+    <div class="referral-box">
+        <p><strong>Total Earned from Referrals:</strong></p>
+        <p class="highlight">{{ total_earned }} BTC</p>
+    </div>
+
+    <div class="referral-box">
+        <p><strong>Reward History</strong></p>
+        {% if history %}
+        <ul class="reward-history">
+            {% for row in history %}
+            <li>
+                Earned <span class="highlight">{{ row.amount }} BTC</span> from <strong>{{ row.referred_username }}</strong><br>
+                <small>{{ row.timestamp }}</small>
+            </li>
+            {% endfor %}
+        </ul>
+        {% else %}
+        <p>No referral rewards yet.</p>
+        {% endif %}
+    </div>
+
+    <div class="referral-box">
+        <form action="{{ url_for('logout') }}" method="post" style="margin-top: 10px;">
+            <button type="submit" style="background-color: #ff4444; color: #fff; padding: 10px 20px; border: none; border-radius: 10px; cursor: pointer;">
+                Log Out
+            </button>
+        </form>
+    </div>
+</div>
+
+<div class="nav">
+    <a href="{{ url_for('home') }}"><i class="fas fa-home"></i> Home</a>
+    <a href="{{ url_for('earn') }}" class="active"><i class="fas fa-gift"></i> EARN</a>
+    <a href="{{ url_for('assets') }}"><i class="fas fa-coins"></i> Assets</a>
+</div>
+
+<div id="toast">Copied!</div>
+
+<script>
+function copyReferral() {
+    const text = document.getElementById('ref-link').innerText;
+    navigator.clipboard.writeText(text).then(() => {
+        const toast = document.getElementById('toast');
+        toast.classList.add('show');
+        setTimeout(() => toast.classList.remove('show'), 2000);
+    });
+}
+</script>
+
+</body>
+</html>

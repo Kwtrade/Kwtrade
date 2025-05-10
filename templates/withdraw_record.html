@@ -1,0 +1,68 @@
+<!-- templates/withdraw_record.html -->
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Withdrawal Record</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <style>
+        body {
+            margin: 0;
+            background-color: #000;
+            color: #fff;
+            font-family: Arial, sans-serif;
+        }
+        .topbar {
+            padding: 15px 20px;
+            background-color: #000;
+            font-size: 18px;
+            font-weight: bold;
+        }
+        .container {
+            padding: 20px;
+        }
+        .record {
+            background-color: #1a1a1a;
+            border-radius: 10px;
+            padding: 15px;
+            margin-bottom: 15px;
+        }
+        .record p {
+            margin: 5px 0;
+            font-size: 14px;
+        }
+        .status {
+            font-weight: bold;
+        }
+        .status.pending {
+            color: orange;
+        }
+        .status.success {
+            color: lightgreen;
+        }
+        .status.failed {
+            color: red;
+        }
+    </style>
+</head>
+<body>
+
+<div class="topbar">Withdrawal Record</div>
+
+<div class="container">
+    {% if records %}
+        {% for r in records %}
+        <div class="record">
+            <p><strong>Address:</strong> {{ r.address }}</p>
+            <p><strong>Amount:</strong> {{ r.amount }} BTC</p>
+            <p><strong>Fee:</strong> {{ r.fee }} BTC</p>
+            <p><strong>Date:</strong> {{ r.date }}</p>
+            <p class="status {{ r.status|lower }}"><strong>Status:</strong> {{ r.status }}</p>
+        </div>
+        {% endfor %}
+    {% else %}
+        <p>No withdrawal records found.</p>
+    {% endif %}
+</div>
+
+</body>
+</html>

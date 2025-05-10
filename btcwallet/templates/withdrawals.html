@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Withdrawal Record</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        body {
+            background-color: #0e141a;
+            color: white;
+            font-family: sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+        header {
+            background: #0e141a;
+            display: flex;
+            align-items: center;
+            padding: 15px;
+            border-bottom: 1px solid #222;
+        }
+        .back-button {
+            color: white;
+            text-decoration: none;
+            font-size: 20px;
+            margin-right: 10px;
+        }
+        h2 {
+            font-size: 18px;
+            margin: 0;
+        }
+        .content {
+            padding: 20px;
+            padding-bottom: 70px;
+        }
+        .record {
+            background: #1e2a36;
+            padding: 15px;
+            margin-bottom: 10px;
+            border-radius: 10px;
+        }
+        .record div {
+            margin-bottom: 5px;
+            font-size: 14px;
+        }
+        .status {
+            display: inline-block;
+            padding: 3px 8px;
+            border-radius: 5px;
+            font-size: 12px;
+        }
+        .status.pending { background: orange; color: black; }
+        .status.completed { background: #4caf50; color: white; }
+        .status.failed { background: red; color: white; }
+
+        .no-record {
+            text-align: center;
+            color: gray;
+            margin-top: 50px;
+        }
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            background: #0e141a;
+            border-top: 1px solid #222;
+            display: flex;
+            justify-content: space-around;
+            padding: 10px 0;
+        }
+        .bottom-nav a {
+            color: white;
+            text-decoration: none;
+            font-size: 14px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .bottom-nav i {
+            font-size: 18px;
+        }
+    </style>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
+</head>
+<body>
+    <header>
+        <a href="/account" class="back-button">&#8592;</a>
+        <h2>Withdrawal Record</h2>
+    </header>
+
+    <div class="content">
+        {% if withdrawals %}
+            {% for w in withdrawals %}
+                <div class="record">
+                    <div><strong>Amount:</strong> {{ w[0] }} BTC</div>
+                    <div><strong>Fee:</strong> {{ w[1] }} BTC</div>
+                    <div><strong>Address:</strong> {{ w[2] }}</div>
+                    <div>
+                        <strong>Status:</strong> 
+                        <span class="status {{ w[3]|lower }}">{{ w[3] }}</span>
+                    </div>
+                    <div><strong>Date:</strong> {{ w[4] }}</div>
+                    {% if w|length > 5 %}
+                        <div><a href="https://mempool.space/tx/{{ w[5] }}" target="_blank" style="color:#4da6ff;">View TXID</a></div>
+                    {% endif %}
+                </div>
+            {% endfor %}
+        {% else %}
+            <div class="no-record">No more</div>
+        {% endif %}
+    </div>
+
+    <div class="bottom-nav">
+        <a href="/home"><i class="fas fa-home"></i>Home</a>
+        <a href="/account"><i class="fas fa-user"></i>Account</a>
+        <a href="/history"><i class="fas fa-clock"></i>History</a>
+        <a href="/earn"><i class="fas fa-gift"></i>Earn</a>
+    </div>
+</body>
+</html>
